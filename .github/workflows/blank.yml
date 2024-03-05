@@ -1,4 +1,4 @@
-name: Deploy Helm Chart to EKS
+name: Deploy Helm Chart to Minikube
 
 on:
   push:
@@ -13,11 +13,11 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Setup Kubectl
-      uses: azure/setup-kubectl@v1
+    - name: Set up Minikube
+      uses: kubevirt/minikube-setup-action@v1
       with:
-        version: 'latest'
-        kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+        minikube_version: latest
+        kubernetes_version: latest
 
     - name: Install Helm
       run: |
@@ -26,9 +26,7 @@ jobs:
         ./get_helm.sh
 
     - name: Add Helm Repository
-      run: |
-        helm repo add bitnami https://charts.bitnami.com/bitnami
+      run: helm repo add bitnami https://charts.bitnami.com/bitnami
 
     - name: Deploy Helm Chart
-      run: |
-        helm install my-keycloak bitnami/keycloak --version 19.1.0
+      run: helm install my-keycloak bitnami/keycloak --version 19.0.0
